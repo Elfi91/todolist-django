@@ -2,13 +2,13 @@
 
 > **⚠️ WORK IN PROGRESS** > This project is currently under development as part of my learning journey. New features, improved error handling, and documentation are being added regularly.
 
-This project is a practical exercise on managing **Many-to-One** (Molti-a-Uno)relationships in Django, developed during the **Edgemony / AWS re/Start** course.
+This project is a practical implementation of **Many-to-One** relationships in Django, developed during the **Edgemony / AWS re/Start course**. It features a full CRUD (Create, Read, Update, Delete) system for managing projects and their associated tasks.
 
 ## 📌 Learning Objectives
-- Separate business logic into modular apps (`projects` and `tasks`).
-- Implement a **Foreign Key** to link each Task to a specific Project.
-- Create API endpoints for data insertion using **Postman**.
-- Use **DBeaver** for visualization and analysis of the relational database schema.
+- **Modular Architecture:** Separated business logic into `projects` and `tasks` apps.
+- **Relational Integrity:** Implemented **Foreign Keys** with `on_delete=models.CASCADE` to ensure data consistency.
+- **RESTful API Design:** Developed endpoints using various HTTP methods (GET, POST, PATCH, DELETE).
+- **Database Management:** Used **DBeaver** for schema analysis and **Django Migrations** for version control of the database structure.
 
 ## 🛠️ Tech stack
 - **Backend:** Python 3.x & Django
@@ -32,6 +32,18 @@ This project is a practical exercise on managing **Many-to-One** (Molti-a-Uno)re
    ```bash
    python manage.py runserver
 ## 📡 API Endpoints
-`POST /api/project/add/`: Creates a new project.
 
-`POST /api/tasks/add/`: Creates a task linked to a project (`requires project_id`).
+### Projects
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| POST | `/api/projects/add/` | Create a new project |
+| GET | `/api/projects/` | List all available projects |
+| DELETE | `/api/projects/delete/<id>/` | Delete a project and all its associated tasks |
+
+### Tasks
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| POST | `/api/tasks/add/` | Create a task linked to a project |
+| GET | `/api/tasks/?project_id=<id>` | List all tasks for a specific project |
+| PATCH | `/api/tasks/update/<id>/` | Partially update task title or description |
+| DELETE | `/api/tasks/delete/<id>/` | Remove a specific task |
