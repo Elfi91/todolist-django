@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 import json
 
 from tasks.models import Task
@@ -27,3 +27,49 @@ def create_task(request):
         
     # 3. Rispondiamo a Postman che è andata bene
     return JsonResponse({"message": "Task aggiunta!", "id": new_task.id})
+
+@require_http_methods(["GET"])
+def get_taks_by_project(request):
+    project_id = request.GET.get('project_id')
+
+    taks = Task.objects.filter(project_id=project_id)
+
+    task_list = []
+    for t in taks:
+        task_list.append({
+            "id": t.id,
+            "title": t.title,
+            "description": t.description,
+        })
+
+    return JsonResponse({"project_id": project_id, "tasks": task_list})
+
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_task(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        task_title = task.title
+        task.delete
+        return JsonResponse({"message": f"Task '{task_title}' (ID: {task_id} deleted successfully!"})
+    except Task.DoesNotExist:
+        return JsonResponse({"error": "Task not found"}, status=404)
+    
+@csrf_exempt
+@require_http_methods(["PATCH"])
+def patch_task(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        data = json.loads(request.body)
+
+        if 'title' in data:
+            task.title = data['title']
+        if 'description' in data:
+            task.description = data['description']
+        if 'project' in data:
+            task.project_id = data['project']
+
+        task.save()
+        return JsonResponse({"message": f"Task {task_id} updated!", "id": task.id})
+    except Task.DoesNotExist:
+        return JsonResponse({"error": "Task not found"}, status=404)

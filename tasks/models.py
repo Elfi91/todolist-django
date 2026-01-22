@@ -5,6 +5,7 @@ from django.db import models
 class Task(models.Model):
     title = models.CharField(max_length=200)
     # "ponte" verso l'altra app:
+    description = models.TextField(blank=True, null=True)
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks')
 
     def __str__(self):
