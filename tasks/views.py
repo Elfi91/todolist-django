@@ -73,3 +73,22 @@ def patch_task(request, task_id):
         return JsonResponse({"message": f"Task {task_id} updated!", "id": task.id})
     except Task.DoesNotExist:
         return JsonResponse({"error": "Task not found"}, status=404)
+    
+@csrf_exempt
+@require_http_methods(["PUT"])
+def put_task(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        data = json.loads(request.body)
+        
+        # Con PUT, sovrascriviamo tutto
+        task.title = data.get('title')
+        task.description = data.get('description')
+        task.project_id = data.get('project')
+        
+        task.save()
+        return JsonResponse({"message": f"Task {task_id} fully updated (PUT)!"})
+    except Task.DoesNotExist:
+        return JsonResponse({"error": "Task not found"}, status=404)
+    except KeyError:
+        return JsonResponse({"error": "Missing required fields for PUT"}, status=400)

@@ -46,4 +46,5 @@ This project is a practical implementation of **Many-to-One** relationships in D
 | POST | `/api/tasks/add/` | Create a task linked to a project |
 | GET | `/api/tasks/?project_id=<id>` | List all tasks for a specific project |
 | PATCH | `/api/tasks/update/<id>/` | Partially update task title or description |
+| PUT | `/api/tasks/full-update/<id>/` | Replace an entire task (Title, Desc, Project) |
 | DELETE | `/api/tasks/delete/<id>/` | Remove a specific task |
