@@ -22,6 +22,9 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        db_table = 'tasks'
 
 class TaskDetail(models.Model):
     """
@@ -34,3 +37,6 @@ class TaskDetail(models.Model):
 
     def __str__(self):
         return f"Metadata for: {self.task.title}"
+    
+    class Meta:
+        db_table = 'task_details'

@@ -15,6 +15,9 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        db_table = 'projects'
 
 class ProjectDetail(models.Model):
     project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='details')
@@ -23,3 +26,6 @@ class ProjectDetail(models.Model):
 
     def __str__(self):
         return f"Metadata for: {self.project.name}"
+    
+    class Meta:
+        db_table = 'project_details'
