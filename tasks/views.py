@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_http_methods
 import json
-from tasks.models import Task, TaskDetail
+from tasks.models import Tag, Task, TaskDetail
 
 @csrf_exempt
 @require_POST
@@ -74,3 +74,17 @@ def add_task_details(request):
         return JsonResponse({"message": "Task details created!", "detail_id": detail.id})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+    
+@csrf_exempt
+@require_POST
+def attach_tag_to_task(request, task_id):
+    try:
+        data = json.loads(request.body)
+        task = Task.objects.get(id=task_id)
+        tag = Tag.objects.get(id=data['tag_id'])
+        task.tags.add(tag) 
+
+        return JsonResponse({"message": f"Tag '{tag.name}' aggiunto alla task!"})
+    
+    except (Task.DoesNotExist, Tag.DoesNotExist):
+        return JsonResponse({"error": "Task o Tag non trovati"}, status=404)
